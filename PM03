@@ -1,0 +1,102 @@
+#Boa:Frame:Ventana
+ 
+import wx
+ 
+def create(parent):
+    return Ventana(parent)
+ 
+[wxID_VENTANA, wxID_VENTANABTCALCULAR, wxID_VENTANABTLIMPIAR, 
+ wxID_VENTANABTSALIR, wxID_VENTANASTDISPLAY, wxID_VENTANASTVALORSMS, 
+ wxID_VENTANATCTEXTOSMS, wxID_VENTANATCVALORSMS, 
+] = [wx.NewId() for _init_ctrls in range(8)]
+ 
+class Ventana(wx.Frame):
+    def _init_ctrls(self, prnt):
+        # generated method, don't edit
+        wx.Frame.__init__(self, id=wxID_VENTANA, name=u'Ventana', parent=prnt,
+              pos=wx.Point(532, 117), size=wx.Size(320, 480),
+              style=wx.DEFAULT_FRAME_STYLE, title=u'Valor del SMS')
+        self.SetClientSize(wx.Size(312, 449))
+        self.SetBackgroundColour(wx.Colour(0, 255, 128))
+ 
+        self.tcTextoSMS = wx.TextCtrl(id=wxID_VENTANATCTEXTOSMS,
+              name=u'tcTextoSMS', parent=self, pos=wx.Point(6, 6),
+              size=wx.Size(300, 320), style=0,
+              value=u'Escribir un mensaje aqui')
+        self.tcTextoSMS.SetBackgroundColour(wx.Colour(213, 255, 234))
+        self.tcTextoSMS.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL,
+              False, u'Modern'))
+        self.tcTextoSMS.SetForegroundColour(wx.Colour(0, 128, 64))
+ 
+        self.stValorSMS = wx.StaticText(id=wxID_VENTANASTVALORSMS,
+              label=u'Valor del caracter', name=u'stValorSMS', parent=self,
+              pos=wx.Point(8, 340), size=wx.Size(144, 12), style=0)
+        self.stValorSMS.SetHelpText(u'Valor del caracter por Byte en pesos chilenos.')
+        self.stValorSMS.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL,
+              False, u'Terminal'))
+        self.stValorSMS.SetForegroundColour(wx.Colour(0, 128, 64))
+ 
+        self.tcValorSMS = wx.TextCtrl(id=wxID_VENTANATCVALORSMS,
+              name=u'tcValorSMS', parent=self, pos=wx.Point(168, 336),
+              size=wx.Size(136, 21), style=0, value=u'')
+        self.tcValorSMS.SetBackgroundColour(wx.Colour(213, 255, 234))
+        self.tcValorSMS.SetForegroundColour(wx.Colour(0, 128, 64))
+        self.tcValorSMS.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL,
+              False, u'Modern'))
+ 
+        self.stDisplay = wx.StaticText(id=wxID_VENTANASTDISPLAY, label=u'-',
+              name=u'stDisplay', parent=self, pos=wx.Point(156, 376),
+              size=wx.Size(10, 18), style=0)
+        self.stDisplay.SetCursor(wx.CROSS_CURSOR)
+        self.stDisplay.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL,
+              False, u'Modern'))
+        self.stDisplay.SetForegroundColour(wx.Colour(0, 128, 64))
+        self.stDisplay.Center(wx.HORIZONTAL)
+        self.stDisplay.SetMaxSize(wx.Size(100, 18))
+ 
+        self.btCalcular = wx.Button(id=wxID_VENTANABTCALCULAR,
+              label=u'Calcular', name=u'btCalcular', parent=self,
+              pos=wx.Point(112, 416), size=wx.Size(75, 23), style=0)
+        self.btCalcular.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL,
+              False, u'Terminal'))
+        self.btCalcular.SetForegroundColour(wx.Colour(0, 128, 64))
+        self.btCalcular.Bind(wx.EVT_BUTTON, self.OnBtCalcularButton,
+              id=wxID_VENTANABTCALCULAR)
+ 
+        self.btLimpiar = wx.Button(id=wxID_VENTANABTLIMPIAR, label=u'Limpiar',
+              name=u'btLimpiar', parent=self, pos=wx.Point(8, 416),
+              size=wx.Size(75, 23), style=0)
+        self.btLimpiar.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
+              u'Terminal'))
+        self.btLimpiar.SetForegroundColour(wx.Colour(0, 128, 64))
+        self.btLimpiar.Bind(wx.EVT_BUTTON, self.OnBtLimpiarButton,
+              id=wxID_VENTANABTLIMPIAR)
+ 
+        self.btSalir = wx.Button(id=wxID_VENTANABTSALIR, label=u'Salir',
+              name=u'btSalir', parent=self, pos=wx.Point(232, 416),
+              size=wx.Size(75, 23), style=0)
+        self.btSalir.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
+              u'Terminal'))
+        self.btSalir.SetForegroundColour(wx.Colour(0, 128, 64))
+        self.btSalir.Bind(wx.EVT_BUTTON, self.OnBtSalirButton,
+              id=wxID_VENTANABTSALIR)
+ 
+    def __init__(self, parent):
+        self._init_ctrls(parent)
+ 
+    def OnBtSalirButton(self, event):
+        self.Close()
+        event.Skip()
+ 
+    def OnBtLimpiarButton(self, event):
+        self.tcTextoSMS.SetValue('')
+        self.tcValorSMS.SetValue('')
+        self.stDisplay.SetLabel('')
+        event.Skip()
+ 
+    def OnBtCalcularButton(self, event):
+        sms=int(len(str(self.tcTextoSMS.GetValue())))
+        peso=int(self.tcValorSMS.GetValue())
+        resultado=sms*peso
+        self.stDisplay.SetLabel('El valor del mensaje es '+resultado)
+        event.Skip()
