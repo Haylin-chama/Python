@@ -1,0 +1,136 @@
+#Boa:Frame:Funciones
+
+import wx
+import math
+
+def create(parent):
+    return Funciones(parent)
+
+[wxID_FUNCIONES, wxID_FUNCIONESBTCALCULAR, wxID_FUNCIONESBTLIMPIAR, 
+ wxID_FUNCIONESBTSALIR, wxID_FUNCIONESSTMAX, wxID_FUNCIONESSTMIN, 
+ wxID_FUNCIONESTCDISPLAY, wxID_FUNCIONESTCMAX, wxID_FUNCIONESTCMIN, 
+] = [wx.NewId() for _init_ctrls in range(9)]
+
+class Funciones(wx.Frame):
+    def _init_ctrls(self, prnt):
+        # generated method, don't edit
+        wx.Frame.__init__(self, id=wxID_FUNCIONES, name=u'Funciones',
+              parent=prnt, pos=wx.Point(367, 203), size=wx.Size(403, 480),
+              style=wx.DEFAULT_FRAME_STYLE,
+              title=u'Tabulaci\xf3n de Funciones')
+        self.SetClientSize(wx.Size(395, 449))
+        self.SetBackgroundColour(wx.Colour(170, 255, 213))
+        self.SetForegroundColour(wx.Colour(0, 64, 128))
+        self.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
+              u'Terminal'))
+        self.SetIcon(wx.Icon(u'C:/Python27/Lib/site-packages/boa-constructor/Images/Icons/Collection.ico',
+              wx.BITMAP_TYPE_ICO))
+
+        self.tcMin = wx.TextCtrl(id=wxID_FUNCIONESTCMIN, name=u'tcMin',
+              parent=self, pos=wx.Point(88, 40), size=wx.Size(100, 21), style=0,
+              value=u'')
+        self.tcMin.Bind(wx.EVT_TEXT_ENTER, self.OnTcMinTextEnter,
+              id=wxID_FUNCIONESTCMIN)
+        self.tcMin.Bind(wx.EVT_TEXT_MAXLEN, self.OnTcMinTextMaxlen,
+              id=wxID_FUNCIONESTCMIN)
+        self.tcMin.Bind(wx.EVT_HELP, self.OnTcMinHelp, id=wxID_FUNCIONESTCMIN)
+
+        self.stMin = wx.StaticText(id=wxID_FUNCIONESSTMIN, label=u'X Minimo',
+              name=u'stMin', parent=self, pos=wx.Point(88, 16), size=wx.Size(96,
+              16), style=0)
+
+        self.tcMax = wx.TextCtrl(id=wxID_FUNCIONESTCMAX, name=u'tcMax',
+              parent=self, pos=wx.Point(200, 40), size=wx.Size(100, 21),
+              style=0, value=u'')
+        self.tcMax.Bind(wx.EVT_TEXT_ENTER, self.OnTcMaxTextEnter,
+              id=wxID_FUNCIONESTCMAX)
+        self.tcMax.Bind(wx.EVT_TEXT_MAXLEN, self.OnTcMaxTextMaxlen,
+              id=wxID_FUNCIONESTCMAX)
+
+        self.stMax = wx.StaticText(id=wxID_FUNCIONESSTMAX, label=u'X Maximo',
+              name=u'stMax', parent=self, pos=wx.Point(200, 16),
+              size=wx.Size(96, 16), style=0)
+
+        self.tcDisplay = wx.TextCtrl(id=wxID_FUNCIONESTCDISPLAY,
+              name=u'tcDisplay', parent=self, pos=wx.Point(25, 68),
+              size=wx.Size(344, 312),
+              style=wx.TE_RIGHT | wx.VSCROLL | wx.TE_MULTILINE | wx.HSCROLL,
+              value=u'')
+        self.tcDisplay.SetBackgroundColour(wx.Colour(0, 0, 0))
+        self.tcDisplay.SetForegroundColour(wx.Colour(255, 255, 255))
+        self.tcDisplay.SetEditable(False)
+        self.tcDisplay.SetCursor(wx.CROSS_CURSOR)
+        self.tcDisplay.Center(wx.BOTH)
+
+        self.btCalcular = wx.Button(id=wxID_FUNCIONESBTCALCULAR,
+              label=u'Calcular', name=u'btCalcular', parent=self,
+              pos=wx.Point(8, 392), size=wx.Size(123, 26), style=0)
+        self.btCalcular.Bind(wx.EVT_BUTTON, self.OnBtCalcularButton,
+              id=wxID_FUNCIONESBTCALCULAR)
+
+        self.btLimpiar = wx.Button(id=wxID_FUNCIONESBTLIMPIAR, label=u'Limpiar',
+              name=u'btLimpiar', parent=self, pos=wx.Point(136, 392),
+              size=wx.Size(123, 26), style=0)
+        self.btLimpiar.Center(wx.HORIZONTAL)
+        self.btLimpiar.Bind(wx.EVT_BUTTON, self.OnBtLimpiarButton,
+              id=wxID_FUNCIONESBTLIMPIAR)
+
+        self.btSalir = wx.Button(id=wxID_FUNCIONESBTSALIR, label=u'Salir',
+              name=u'btSalir', parent=self, pos=wx.Point(264, 392),
+              size=wx.Size(123, 26), style=0)
+        self.btSalir.Bind(wx.EVT_BUTTON, self.OnBtSalirButton,
+              id=wxID_FUNCIONESBTSALIR)
+
+    def __init__(self, parent):
+        self._init_ctrls(parent)
+
+    def OnBtSalirButton(self, event):
+        self.Close()
+        event.Skip()
+
+    def OnBtLimpiarButton(self, event):
+        self.tcMin.SetValue('')
+        self.tcMax.SetValue('')
+        self.tcDisplay.SetValue('')
+        self.tcMin.SetFocus()
+        event.Skip()
+
+    def OnTcMinTextEnter(self, event):
+        self.tcMin.SetFocus()
+        event.Skip()
+
+    def OnTcMaxTextEnter(self, event):
+        self.tcMax.SetFocus()
+        event.Skip()
+
+    def OnTcMinTextMaxlen(self, event):
+        event.Skip()
+
+    def OnTcMaxTextMaxlen(self, event):
+        event.Skip()
+
+    def OnBtCalcularButton(self, event):
+        a=self.tcMin.GetValue()
+        b=self.tcMax.GetValue()
+        if not a.isdigit():
+                self.tcMin.SetValue('Error')
+                wx.MessageBox('Error en X Minimo'+'\n'+'Solo se admiten digitos positivos.')
+        if not b.isdigit():
+                self.tcMax.SetValue('Error')
+                wx.MessageBox('Error en X Maximo'+'\n'+'Solo se admiten digitos positivos.')
+        if a.isdigit() and b.isdigit():
+            if int(a)<int(b):
+                self.tcDisplay.SetValue('')
+                while int(a)<=int(b):
+                    if int(a)==2:
+                        self.tcDisplay.SetValue(self.tcDisplay.GetValue()+'\n'+'No existe = 2')
+                    else:
+                        y=(pow((float(a)),2)-float(a)+3)/(pow((float(a)),2)-4)
+                        self.tcDisplay.SetValue(self.tcDisplay.GetValue()+'\n'+str(y)+' = '+str(a))
+                    a=str(int(a)+1)
+            else:
+                wx.MessageBox('Error en los valores de x.'+'\n'+'El minimo debe ser menor al maximo.')
+        event.Skip()
+
+    def OnTcMinHelp(self, event):
+        event.Skip()
